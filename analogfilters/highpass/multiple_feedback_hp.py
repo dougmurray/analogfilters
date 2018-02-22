@@ -1,7 +1,7 @@
-"""Multiple Feedback Low Pass Filter
+"""Multiple Feedback High Pass Filter
 
- Based on Figure 5-70 in Op Amp Applications Handbook, by Walt Jung.
- Figure 5-70 ASCII style
+ Based on Figure 5-71 in Op Amp Applications Handbook, by Walt Jung.
+ Figure 5-71 ASCII style
         +------+--------------+-----o
         C4     R5             |
         |      |   ___amp__   |
@@ -53,7 +53,7 @@ def cut_off_function(f0, c1):
         None
     """
     # Intialized constants
-    # Intialized based on a Quality factor (Q) of 2
+    # Intialized based on a Quality factor (Q) of 2, peaking
     # Since alpha = 1/Q; xi = 2*alpha
     alpha = 0.5 # damping ratio, default (1/2)
     H = 1.0 # circuit gain at passband, default 1 (unity)
@@ -88,7 +88,6 @@ def component_transfer_function(c1, c3, c4, r2, r5):
     realC1 = c1 * 1.0e-6
     realC3 = c3 * 1.0e-6
     realC4 = c4 * 1.0e-6
-
 
     H = 1.0 # circuit gain at passband, defualt 1 (unity)
     alpha = np.sqrt(H * r2 * 2.0 * (2.0 + (1.0 / H)) / r5) 

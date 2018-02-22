@@ -53,7 +53,7 @@ def cut_off_function(f0, c5):
         None
     """
     # Intialized constants
-    # Intialized based on a Quality factor (Q) of 2
+    # Intialized based on a Quality factor (Q) of 2, peaking
     # Since alpha = 1/Q; xi = 2*alpha
     alpha = 0.5 # damping ratio, default (1/2)
     H = 1.0 # circuit gain at passband, default 1 (unity)
