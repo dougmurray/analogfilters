@@ -92,11 +92,12 @@ def component_transfer_function(r1, r2, c3, c4, r5):
     H = 1.0 # circuit gain at passband, defualt 1 (unity)
     k = 1. / (H * r1)
     f0 = k / (2.0 * np.pi * realC3)
+    alpha = 0.5
 
     print("For R1: ", r1)
     print("For R2: ", r2)
-    print("For C3: ", c3)
-    print("For C4: ", c4)
+    print("For C3: ", realc3)
+    print("For C4: ", realc4)
     print("For R5: ", r5)
     print("Cutoff frequency: ", f0, " Hz")
     print("Damping ratio: ", alpha, " arb.")
