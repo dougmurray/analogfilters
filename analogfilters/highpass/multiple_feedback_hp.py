@@ -30,11 +30,11 @@ def interface():
     choice = int(input("Calculate filter response (1) or calculate component values (2): "))
 
     if choice == 1:
-        COne = float(input("Input C1: "))
-        cThree = float(input("Input C3: "))
-        cFour = float(input("Input C4: "))
-        rTwo = float(input("Input R2 in uF: "))
-        rFive = float(input("Input R5 in uF: "))
+        COne = float(input("Input C1 in uF: "))
+        cThree = float(input("Input C3 in uF: "))
+        cFour = float(input("Input C4 in uF: "))
+        rTwo = float(input("Input R2: "))
+        rFive = float(input("Input R5: "))
         component_transfer_function(COne, cThree, cFour, rTwo, rFive)
     elif choice == 2:
         cut_off_freq = float(input("Input cut-off frequency: "))
@@ -62,8 +62,8 @@ def cut_off_function(f0, c1):
     k = (2.0 * np.pi * f0 * realC1)
     c3 = c1
     c4 = c1 / H
-    r2 = alpha / (k * (2 + (1 / H)))
-    r5 = (H * (2 + (1. / H))) / (alpha * k)
+    r2 = alpha / (k * (np.power(1 / H, 2.)))
+    r5 = (H * (np.power(1. / H, 2.))) / (alpha * k)
 
     print("For cutoff frequency: ", f0, " Hz")
     print("C3: ", c3)
@@ -85,13 +85,13 @@ def component_transfer_function(c1, c3, c4, r2, r5):
     # Convert to uF
     realC1 = c1 * 1.0e-6
     realC3 = c3 * 1.0e-6
-    realC5 = c5 * 1.0e-6
+    realC4 = c4 * 1.0e-6
 
 
     H = 1.0 # circuit gain at passband, defualt 1 (unity)
     alpha = np.sqrt(H * r2 * 2.0 * (2.0 + (1.0 / H)) / r5) 
     k = (H* (2.0 + (1.0/ H))) / (alpha * r5)
-    f0 = k / (2.0 * np.pi * c1)
+    f0 = k / (2.0 * np.pi * realC1)
 
     print("For C1: ", realC1)
     print("For C3: ", realC3)
