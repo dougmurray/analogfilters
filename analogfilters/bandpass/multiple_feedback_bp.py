@@ -1,13 +1,13 @@
-"""Multiple Feedback Low Pass Filter
+"""Multiple Feedback Bandpass Filter
 
- Based on Figure 5-70 in Op Amp Applications Handbook, by Walt Jung.
- Figure 5-70 ASCII style
+ Based on Figure 5-72 in Op Amp Applications Handbook, by Walt Jung.
+ Figure 5-72 ASCII style
         +------+--------------+-----o
-        R4     C5             |
+        C4     R5             |
         |      |   ___amp__   |
- o--R1--+--R3--+--| -      |  |
+ o--R1--+--C3--+--| -      |  |
         |         |    out |--+
-        C2     +--| +      |
+        R2     +--| +      |
         |      |  |________|
        -_-    -_-
 """
@@ -17,38 +17,38 @@ def interface():
     """Runs general interface/welcome screen
     """
     print("")
-    print("Multple Feedback Low Pass Filter")
+    print("Multple Feedback Bandpass Filter")
     print("--------------------------------")
     print("         +------+--------------+-----o")
-    print("         R4     C5             |")
+    print("         C4     R5             |")
     print("         |      |   ___amp__   |")
-    print(" o---R1--+--R3--+--| -      |  |")
+    print(" o---R1--+--C3--+--| -      |  |")
     print("         |         |    out |--+")
-    print("         C2     +--| +      |")
+    print("         R2     +--| +      |")
     print("         |      |  |________|")
     print("        -_-    -_-")
     choice = int(input("Calculate filter response (1) or calculate component values (2): "))
 
     if choice == 1:
         rOne = float(input("Input R1: "))
-        rThree = float(input("Input R3: "))
-        rFour = float(input("Input R4: "))
-        cTwo = float(input("Input C2 in uF: "))
-        cFive = float(input("Input C5 in uF: "))
-        component_transfer_function(rOne, rThree, rFour, cTwo, cFive)
+        rTwo = float(input("Input R2: "))
+        cThree = float(input("Input C3 in uF: "))
+        cFour = float(input("Input C4 in uF: "))
+        rFive = float(input("Input R5: "))
+        component_transfer_function(rOne, rTwo, cThree, cFour, rFive)
     elif choice == 2:
         cut_off_freq = float(input("Input cut-off frequency: "))
-        decent_cap = float(input("Input C5 capacitance in uF: "))
+        decent_cap = float(input("Input C3 capacitance in uF: "))
         cut_off_function(cut_off_freq, decent_cap)
     else:
         print("Please choose either 1 or 2")
 
-def cut_off_function(f0, c5):
+def cut_off_function(f0, c3):
     """Calculates the component values for the given cut-off frequency
 
     Args:
         f0: cut-off frequency
-        c5: base line capacitor
+        c3: base line capacitor
     Returns:
         None
     """
@@ -57,46 +57,47 @@ def cut_off_function(f0, c5):
     # Since alpha = 1/Q; xi = 2*alpha
     alpha = 0.5 # damping ratio, default (1/2)
     H = 1.0 # circuit gain at passband, default 1 (unity)
+    Q = 2 # Q = 1 / alpha
 
     # Convert to uF
-    realC5 = c5 * 1.0e-6
+    realC3 = c3 * 1.0e-6
 
-    k = (2.0 * np.pi * f0 * realC5)
-    r4 = alpha / (2.0 * k)
-    r3 = alpha / (2.0 * (H + 1.0) * k)
-    r1 = alpha / (2.0 * H * k)
-    c2 = (4.0 / (2.0 * alpha)) * ((H + 1.0) * realC5)
+    k = (2.0 * np.pi * f0 * realC3)
+    c4 = realC3
+    r1 = 1. / (H * k)
+    r2 = 1. / (((2*Q) - H) * k)
+    r5 = (2*Q) / k
 
     print("For cutoff frequency: ", f0, " Hz")
+    print("C4: ", c4)
     print("R1: ", r1)
-    print("R3: ", r3)
-    print("R4: ", r4)
-    print("C2: ", c2)
-    print("C5: ", realC5)
+    print("R2: ", r2)
+    print("R5: ", r5)
+    print("C3: ", realC3)
 
-def component_transfer_function(r1, r3, r4, c2, c5):
+def component_transfer_function(r1, r2, c3, c4, r5):
     """Calculates the cut-off frequency (f0) and damping ratio (alpha) based
     on filter's component choices
 
     Args:
-        r1, r3, r4: resistors in filter, Ohms
-        c2, c5: capacitors in filter, uF
+        r2, r2, r5: resistors in filter, Ohms
+        c3, c4: capacitors in filter, uF
     Returns:
         None
     """
     # Convert from uF to F
-    realC2 = c2 * 1.0e-6
-    realC5 = c5 * 1.0e-6
-    H = 1.0 # circuit gain at passband, default 1 (unity)
-    k = ((4.0 * (H + 1.0) * realC5) / realC2) / (2.0 * r3 * 4.0)
-    alpha = r3 * 2.0 * (H + 1.0) * k
-    f0 = k / (2.0 * np.pi * realC5)
+    realC3 = c3 * 1.0e-6
+    realC4 = c4 * 1.0e-6
+
+    H = 1.0 # circuit gain at passband, defualt 1 (unity)
+    k = 1. / (H * r1)
+    f0 = k / (2.0 * np.pi * realC3)
 
     print("For R1: ", r1)
-    print("For R3: ", r3)
-    print("For R4: ", r4)
-    print("For C2: ", realC2)
-    print("For C5: ", realC5)
+    print("For R2: ", r2)
+    print("For C3: ", c3)
+    print("For C4: ", c4)
+    print("For R5: ", r5)
     print("Cutoff frequency: ", f0, " Hz")
     print("Damping ratio: ", alpha, " arb.")
 

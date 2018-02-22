@@ -17,7 +17,7 @@ def interface():
     """Runs general interface/welcome screen
     """
     print("")
-    print("Multple Feedback Low Pass Filter")
+    print("Multple Feedback High Pass Filter")
     print("--------------------------------")
     print("         +------+--------------+-----o")
     print("         C4     R5             |")
@@ -58,7 +58,7 @@ def cut_off_function(f0, c1):
     alpha = 0.5 # damping ratio, default (1/2)
     H = 1.0 # circuit gain at passband, default 1 (unity)
 
-    # Convert to uF
+    # Convert from uF to F
     realC1 = c1 * 1.0e-6
 
     k = (2.0 * np.pi * f0 * realC1)
@@ -90,7 +90,7 @@ def component_transfer_function(c1, c3, c4, r2, r5):
     realC4 = c4 * 1.0e-6
 
     H = 1.0 # circuit gain at passband, defualt 1 (unity)
-    alpha = np.sqrt(H * r2 * 2.0 * (2.0 + (1.0 / H)) / r5) 
+    alpha = np.sqrt((H * r2 * np.power((2.0 + (1.0 / H)), 2.)) / r5)
     k = (H* (2.0 + (1.0/ H))) / (alpha * r5)
     f0 = k / (2.0 * np.pi * realC1)
 
