@@ -74,6 +74,8 @@ def cut_off_function(f0, c5):
     print("C2: ", c2)
     print("C5: ", realC5)
 
+    return r1, r3, r4, c2, realC5, H
+
 def component_transfer_function(r1, r3, r4, c2, c5):
     """Calculates the cut-off frequency (f0) and damping ratio (alpha) based
     on filter's component choices
@@ -99,6 +101,8 @@ def component_transfer_function(r1, r3, r4, c2, c5):
     print("For C5: ", realC5)
     print("Cutoff frequency: ", f0, " Hz")
     print("Damping ratio: ", alpha, " arb.")
+
+    return r1, r3, r4, realC2, realC5, H
 
 if __name__ == '__main__':
     while(1):
