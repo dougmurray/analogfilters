@@ -48,11 +48,13 @@ def cut_off_function(f0, c1):
 
     Args:
         f0: cut-off frequency
-        c1: based line capacitor
+        c1: base line capacitor
     Returns:
         None
     """
     # Intialized constants
+    # Intialized based on a Quality factor (Q) of 2
+    # Since alpha = 1/Q; xi = 2*alpha
     alpha = 0.5 # damping ratio, default (1/2)
     H = 1.0 # circuit gain at passband, default 1 (unity)
 
@@ -60,10 +62,10 @@ def cut_off_function(f0, c1):
     realC1 = c1 * 1.0e-6
 
     k = (2.0 * np.pi * f0 * realC1)
-    c3 = c1
-    c4 = c1 / H
-    r2 = alpha / (k * (np.power(1 / H, 2.)))
-    r5 = (H * (np.power(1. / H, 2.))) / (alpha * k)
+    c3 = realC1
+    c4 = realC1 / H
+    r2 = alpha / (k * (2. + (1. / H)))
+    r5 = (H * (2. + (1. / H))) / (alpha * k)
 
     print("For cutoff frequency: ", f0, " Hz")
     print("C3: ", c3)

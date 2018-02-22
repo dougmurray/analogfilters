@@ -48,11 +48,13 @@ def cut_off_function(f0, c5):
 
     Args:
         f0: cut-off frequency
-        c5: based line capacitor
+        c5: base line capacitor
     Returns:
         None
     """
     # Intialized constants
+    # Intialized based on a Quality factor (Q) of 2
+    # Since alpha = 1/Q; xi = 2*alpha
     alpha = 0.5 # damping ratio, default (1/2)
     H = 1.0 # circuit gain at passband, default 1 (unity)
 
