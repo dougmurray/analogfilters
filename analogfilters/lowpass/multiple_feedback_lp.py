@@ -12,6 +12,7 @@
        -_-    -_-
 """
 import numpy as np
+import matplotlib.pyplot as pl
 
 def interface():
     """Runs general interface/welcome screen
@@ -35,11 +36,13 @@ def interface():
         rFour = float(input("Input R4: "))
         cTwo = float(input("Input C2 in uF: "))
         cFive = float(input("Input C5 in uF: "))
-        component_transfer_function(rOne, rThree, rFour, cTwo, cFive)
+        res1, res3, res4, cap2, cap5, fg = component_transfer_function(rOne, rThree, rFour, cTwo, cFive)
+        freq_response_plot(res1, res3, res4, cap2, cap5, fg)
     elif choice == 2:
         cut_off_freq = float(input("Input cut-off frequency: "))
         decent_cap = float(input("Input C5 capacitance in uF: "))
-        cut_off_function(cut_off_freq, decent_cap)
+        res1, res3, res4, cap2, cap5, fg = cut_off_function(cut_off_freq, decent_cap)
+        freq_response_plot(res1, res3, res4, cap2, cap5, fg)
     else:
         print("Please choose either 1 or 2")
 
@@ -103,6 +106,27 @@ def component_transfer_function(r1, r3, r4, c2, c5):
     print("Damping ratio: ", alpha, " arb.")
 
     return r1, r3, r4, realC2, realC5, H
+
+# Frequency response ploting
+def freq_response_plot(r1, r3, r4, c2, c5, H):
+    """Plots the frequency response of the filter"""
+    freq = np.linspace(0, 10000, num=10000) # TODO have range ajust based on fc
+    s = np.array([])
+    for i, element in enumerate(freq):
+        """s = 2 * pi * freq"""
+        s_value = 2 * np.pi * element
+        s = np.append(s, s_value)
+    
+    mflp_transfer = np.array([])
+    for i, element in enumerate(s):
+        """Massive mutliple feedback low-pass transfer function"""
+        vout_vin_ratio = (-H * ( 1. / (r3*r4*c2*c5))) / (np.power(element,2.) + (element * ((1./c2)* ((1./r1) + (1./r3) + (1./r4)))) + (1./(r3*r4*c2*c5)))
+        mflp_transfer = np.append(mflp_transfer, vout_vin_ratio)
+    
+    pl.plot(s,mflp_transfer, '-')
+    pl.ylabel('Gain (arb)')
+    pl.xlabel('Frequency (Hz)')
+    pl.show()
 
 if __name__ == '__main__':
     while(1):
